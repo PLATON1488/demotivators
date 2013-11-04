@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,19 +29,21 @@ public class DemotivatorsViewActivity extends Activity  implements OnClickListen
 	private ListView lvComments;
 	private ImageView ivDemPhoto ;
 	private TextView tvName , tvRating ;
-	private BroadcastReceiver broadcastReceiver1;
 	private HashMap<String, Object>  data ;
 	private View header ;
+	private Bitmap image ;
+	private String url , name , id , count_comments , rating ;
+	private boolean  has_prev , has_next ; 
+	private String next_link , prev_link; 
 	
 
 	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.demotivators_view);
-		searchView();
+		initialization();
 		
 		IntentFilter ifilter = new IntentFilter();
 		ifilter.addAction(Constant.COMMENTS_PREV);
@@ -49,16 +52,8 @@ public class DemotivatorsViewActivity extends Activity  implements OnClickListen
 		
 		header =  getLayoutInflater().inflate(R.layout.header , null);
 		tvName = (TextView)header.findViewById(R.id.tvName);
-		
-		
-		
 		ivDemPhoto  = (ImageView)header.findViewById(R.id.ivDemPhoto);
-		
-		
-		
 		tvRating = (TextView)header.findViewById(R.id.tvRating);
-		
-		
 		data = new HashMap<String, Object>();
 		Intent intent = getIntent();
 		if(intent.getAction().equalsIgnoreCase(Constant.VIEW_DEMOTIVATOR)  ){
@@ -72,27 +67,41 @@ public class DemotivatorsViewActivity extends Activity  implements OnClickListen
 	}
 	
 	
-	private void searchView(){
+	private void  initialization(){
 		lvComments = (ListView)findViewById(R.id.lvComments);
-		
 		btnPrev = (Button)findViewById(R.id.btnPrev);
 		btnNext = (Button)findViewById(R.id.btnNext);
 		btnPrev.setOnClickListener(this);
 		btnNext.setOnClickListener(this);
-		
+
 	}
 
 
 	@Override
 	public void onClick(View v) {
-		
+		String url ;
+		Intent  sintent ;
 		switch(v.getId()){
 		
 		case R.id.btnPrev :
 			
+			url = "http://rtc.demotivators.to/comments/?chan=" +id +"&op=prev&cur=" + prev_link;
+			
+			sintent = new Intent(this, WidgetService.class);
+			sintent.setAction(Constant.COMMENTS_PREV);
+			sintent.putExtra("url_comment", url );
+			startService(sintent);
+			
 			break;
 		
 		case R.id.btnNext :
+			
+			url = "http://rtc.demotivators.to/comments/?chan=" +id +"&op=next&cur=" + next_link;
+			
+			sintent = new Intent(this, WidgetService.class);
+			sintent.setAction(Constant.COMMENTS_PREV);
+			sintent.putExtra("url_comment", url );
+			startService(sintent);
 			
 			break ;
 		}
@@ -125,10 +134,6 @@ public class DemotivatorsViewActivity extends Activity  implements OnClickListen
 				
 			}
 			
-			
-			
-			
-
 
 		}
 	};
@@ -153,8 +158,7 @@ public class DemotivatorsViewActivity extends Activity  implements OnClickListen
 	@SuppressWarnings("unchecked")
 	public void viewDemotivator(Intent intent){
 		
-		Bitmap image ;
-	    String url , name , id , count_comments , rating ;
+	   
 	    
 	    data = (HashMap<String, Object>) intent.getExtras().getSerializable("data");
 	    image =  (Bitmap) data.get("image");
@@ -167,59 +171,81 @@ public class DemotivatorsViewActivity extends Activity  implements OnClickListen
 		ivDemPhoto.setImageBitmap(image);
 		tvName.setText(name);
 		tvRating.setText(rating);
-	
-		Intent  qw = new Intent(this, WidgetService.class);
-		qw.setAction(Constant.COMMENTS_PREV);
-		startService(qw);
-		
-		
-	}
-	
-	public void viewComments(Intent intent){
-	
-		ArrayList<HashMap<String, Object>>  r  = new ArrayList<HashMap<String,Object>>();
-		
-		
-		String [] t = new  String[10];
-		HashMap<String, Object>[]  e  ;
-		r = (ArrayList<HashMap<String, Object>>) intent.getExtras().get("123");
-		ArrayList<HashMap<String, Object>>  d = new ArrayList<HashMap<String,Object>>(r);
-		d.remove(d.size()-1);
-		
-		Log.d("888", d.size()+"");
 		
 		lvComments.addHeaderView(header, "3", false);
+	
+		Intent  sintent = new Intent(this, WidgetService.class);
+		sintent.setAction(Constant.COMMENTS_PREV);
+		sintent.putExtra("url_comment", "http://rtc.demotivators.to/comments/?chan=" +id);
+		startService(sintent);
 		
-		ListAdapter adapter = new ListAdapter(this, R.layout.list, d);
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void viewComments(Intent intent){
+	
+		ArrayList<HashMap<String, Object>>  list_comments  = new ArrayList<HashMap<String,Object>>();
+		
+		
+		
+		HashMap<String, Object> pager  ;
+		list_comments = (ArrayList<HashMap<String, Object>>) intent.getExtras().get("123");
+		if(list_comments.size() > 1){
+			
+			Log.d("999", "LENGTH=  " +list_comments.size());
+			pager =  list_comments.remove(list_comments.size() -1);
+			Log.d("999", "LENGTH=  " +list_comments.size());
+			has_next = Boolean.valueOf(pager.get("hasNext").toString());
+			has_prev = Boolean.valueOf(pager.get("hasPrev").toString());
+			visible_button(has_next, has_prev);
+			Log.d("999", "LENGTH=  " +list_comments.size());
+			next_link = list_comments.get(list_comments.size()-1).get("fslug").toString();
+			prev_link = list_comments.get(0).get("fslug").toString();
+			Log.d("999", "LENGTH=  " +list_comments.size());
+			
+		}
+		
+		
+		 
+		
+		
+		
+		
+		ListAdapter adapter = new ListAdapter(this, R.layout.list, list_comments);
 		
 		lvComments.setAdapter(adapter);
-		
-		
-		
-		
-		
+	
 		
 	}
 	
 	
-	@Override
-	protected void onPause() {
-		// TODO Auto-generated method stub
-		
-		Log.d("444", "onPause");
-		
-		
-		
-		super.onPause();
-	}
+
 
 	
-	@Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
+	public void visible_button(boolean next , boolean prev){
+		
+		if(next){
+			
+			btnNext.setVisibility(Button.VISIBLE);
+		}
+		else{
+			
+			btnNext.setVisibility(Button.INVISIBLE);
+		}
+		
+		
+		if(prev){
+			btnPrev.setVisibility(Button.VISIBLE);
+		}
+		else{
+			btnPrev.setVisibility(Button.INVISIBLE);
+		}
 		
 	}
+	
+	
+	
 	
 	
 	@Override
@@ -230,10 +256,4 @@ public class DemotivatorsViewActivity extends Activity  implements OnClickListen
 		unregisterReceiver(broadcastReceiver);
 	}
 	
-	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-		Log.d("444", "onDestroy");
-	}
 }

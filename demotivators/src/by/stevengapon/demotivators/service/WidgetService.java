@@ -59,11 +59,13 @@ public class WidgetService extends IntentService {
 		   
 		   if(intent.getAction().equalsIgnoreCase(Constant.COMMENTS_PREV)){
 			   
-			Log.d("777", "Commen Next");
+			 String url_comment ;
+			 url_comment = intent.getStringExtra("url_comment");
 			   
 			 intent = new Intent(Constant.COMMENTS_PREV);
 			 ArrayList<HashMap<String, Object>>  ee ;
-			 ee = Parser.parserJSOn( Parser.loadJSOn("4"));
+			 
+			 ee = Parser.parserJSOn( Parser.loadJSOn(url_comment));
 			 intent.putExtra("123", ee);
 			 sendBroadcast(intent);
 		  }

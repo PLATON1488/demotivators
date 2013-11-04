@@ -57,7 +57,10 @@ public class ListAdapter extends ArrayAdapter<HashMap<String, Object>> {
 		   
 		   int margin_left = Parser.count_symbol(slug) ;
 		   Log.d("999" , "margin =  " + margin_left);
-
+           
+		   
+		   convertView.setPadding( (8*margin_left), 0, 0, 0);
+		   
 		   ImageView imageView = (ImageView)convertView.findViewById(R.id.ivUserPhoto);
 		   TextView tvName = (TextView) convertView.findViewById(R.id.tvNameUser);
 		   TextView tvComment = (TextView) convertView.findViewById(R.id.tvComment);

@@ -1,6 +1,5 @@
 package by.stevengapon.demotivators.parser;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -143,7 +142,7 @@ public class Parser {
 		  String result = "";
 		  HttpClient  httpclient =  new DefaultHttpClient();
 	      //HttpGet httpget = new HttpGet(url);
-		  HttpGet httpget = new HttpGet("http://rtc.demotivators.to/comments/?chan=1269752");
+		  HttpGet httpget = new HttpGet(url);
 	      String Tag = "666";
 	      try {
 	    	     Log.d(Tag, "запрос отправлен");

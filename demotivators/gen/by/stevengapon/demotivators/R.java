@@ -19,18 +19,19 @@ public final class R {
         public static final int shape=0x7f020001;
     }
     public static final class id {
-        public static final int btnNext=0x7f080002;
-        public static final int btnPrev=0x7f080001;
-        public static final int button1=0x7f08000b;
-        public static final int img=0x7f08000a;
-        public static final int ivDemPhoto=0x7f080005;
-        public static final int ivUserPhoto=0x7f080007;
-        public static final int layout_top_bar=0x7f080003;
+        public static final int btnNext=0x7f080003;
+        public static final int btnPrev=0x7f080002;
+        public static final int button1=0x7f08000c;
+        public static final int img=0x7f08000b;
+        public static final int ivDemPhoto=0x7f080006;
+        public static final int ivUserPhoto=0x7f080008;
+        public static final int layout_bottom_bar=0x7f080001;
+        public static final int layout_top_bar=0x7f080004;
         public static final int lvComments=0x7f080000;
-        public static final int tvComment=0x7f080009;
-        public static final int tvName=0x7f080004;
-        public static final int tvNameUser=0x7f080008;
-        public static final int tvRating=0x7f080006;
+        public static final int tvComment=0x7f08000a;
+        public static final int tvName=0x7f080005;
+        public static final int tvNameUser=0x7f080009;
+        public static final int tvRating=0x7f080007;
     }
     public static final class layout {
         public static final int demotivators_view=0x7f030000;
