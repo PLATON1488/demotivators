@@ -6,5 +6,6 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="lib" path="E:/Downloads/htmlcleaner-2.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/platon1488/Desktop/commons-io-2.2.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

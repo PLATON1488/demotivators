@@ -13,7 +13,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <receiver android:name="by.stevengapon.demotivators.widgetProvider.Widget" 
+        <receiver android:name="by.stevengapon.demotivators.widgetprovider.Widget" 
             android:icon="@drawable/ic_launcher"
             android:label="@string/app_name">
             <intent-filter>
@@ -22,7 +22,12 @@
             <meta-data android:name="android.appwidget.provider"
                  android:resource="@xml/widget_metadata"/>
         </receiver>
-        <service android:name="by.stevengapon.demotivators.service.UpdateWidgetService" android:permission="android.permission.INTERNET"></service>
+        <service android:name="by.stevengapon.demotivators.service.WidgetService" android:permission="android.permission.INTERNET"></service>
+       
+        <activity 
+            android:name=".activity.DemotivatorsViewActivity">
+            
+        </activity>
     </application>
 
 </manifest>
